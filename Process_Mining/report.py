@@ -31,6 +31,11 @@ def plot_daily_wip(log, wip_time='15:00:00'):
     plt.show()
 
 
+
+
+
+
+
 def plot_utilisation(log, AHT_min_column='A-AHT\n (min)', AVAILABLE_WORK_HOURS_PER_FTE_PER_WEEK=30, TOTAL_FTE=60):
     """
     

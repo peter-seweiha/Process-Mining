@@ -3,12 +3,12 @@ Re-issuing the invoice,133,10
 Invoice Entry,133,10
 Complete the Customer Memo,113,5
 Refund With Standard Voucher,101,7
+Credit Memo Entry,68,5
 Refund Customer,68,6
 Check Customer Payment,68,5
-Credit Memo Entry,68,5
-Approve Invoice,65,5
+Credit Memo Creation,65,5
 Confirm Payment Received,65,12
 Fill Credit Memo,65,5
-Credit Memo Creation,65,5
+Approve Invoice,65,5
 Reject Invoice,48,17
 Refund With Special Voucher,12,3
