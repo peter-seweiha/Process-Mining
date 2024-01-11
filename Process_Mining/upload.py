@@ -40,7 +40,9 @@ class upload:
 
         #__________________________
 
-    def generate_case_log(self, case_attributes=[]):
+    def generate_case_log(self, case_attributes=[], output_folder = 'data'):
+
+        self.output_folder = output_folder
         # Create a table for case Attributes without duplicates
         case_attributes_table = self.data[case_attributes + ['CaseID']].drop_duplicates(subset=['CaseID'])
 
@@ -89,14 +91,16 @@ class upload:
         self.data.drop(case_attributes, axis=1, inplace=True)
 
         # Export the caselog to CSV file for later use
-        case_log.to_csv('_case_log.csv', index=False)
+        case_log.to_csv(output_folder + '/_case_log.csv', index=False)
 
         # Save case log to the object for further use if needed
         self.case_log = case_log
 
 
 
-    def generate_activity_log(self, activity_attributes=[]):
+    def generate_activity_log(self, activity_attributes=[], output_folder = 'data'):
+
+        self.output_folder = output_folder
         # Create a table for case Attributes without duplicates
         activity_attributes_table = self.data[['Activity'] + activity_attributes].drop_duplicates(subset=['Activity'])
 
@@ -111,7 +115,7 @@ class upload:
         self.activity_log = pd.merge(activity_counts, activity_attributes_table, on='Activity', how="left")
 
         # Export the activity log to CSV file for later use
-        self.activity_log.to_csv('_activity_log.csv', index=False)
+        self.activity_log.to_csv(output_folder+'/_activity_log.csv', index=False)
 
         # Drop activity attributes from the main log
         self.data.drop(activity_attributes, inplace=True)
@@ -122,7 +126,7 @@ class upload:
         self.case_log.drop(self.case_log.filter(regex='_y$').columns, axis=1, inplace=True)
 
         # Export the caselog to CSV file for later use
-        self.case_log.to_csv('_case_log.csv', index=False)
+        self.case_log.to_csv(self.output_folder + '/_case_log.csv', index=False)
 
         # self.case_log.columns = ['c-' + col if col != 'CaseID' else col for col in self.case_log.columns]
 
@@ -132,6 +136,6 @@ class upload:
         self.activity_log.drop(self.activity_log.filter(regex='_y$').columns, axis=1, inplace=True)
 
         # Export the activity log to CSV file for later use
-        self.activity_log.to_csv('_activity_log.csv', index=False)
+        self.activity_log.to_csv(self.output_folder + '/_activity_log.csv', index=False)
         
         # self.activity_log.columns = ['A-' + col if col != 'Activity' else col for col in self.activity_log.columns]
