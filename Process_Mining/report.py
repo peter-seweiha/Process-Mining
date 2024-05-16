@@ -71,3 +71,5 @@ def plot_utilisation(log, AHT_min_column='A-AHT\n (min)', AVAILABLE_WORK_HOURS_P
 
     # Show the plot
     plt.show()
+
+

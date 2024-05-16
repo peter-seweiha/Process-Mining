@@ -24,6 +24,39 @@ def filter_cases_by_activity(log, activities_list=['New Case', 'General Enquirie
         filtered_log = log.data[log.data['CaseID'].isin(relevant_caseids['CaseID'])]
         return filtered_log
 
+def filter_cases_by_timeframe(case_log, retain=True, containment='are contained between', StartDateTime='2023-01-01 00:00:00', EndDateTime='2023-07-01 00:00:00'):
+    """
+    case_log: expecting a dataframe with columns ("CaseID", "first_start_stamp", "last_end_stamp")
+    retain: boolean. True means retain, False means remove
+    containment: expect containment type of 4 ("are active between", "start between", "end between", 'are contained between')
+    """
+    
+    # convert datetime column and set the correct format (dd-mm)
+    case_log['first_start_stamp'] = pd.to_datetime(case_log['first_start_stamp'], dayfirst=True)
+    case_log['last_end_stamp'] = pd.to_datetime(case_log['last_end_stamp'], dayfirst=True)
+
+    if containment == 'start between':
+        relevant_caseids = case_log[(case_log['first_start_stamp'] >= StartDateTime) & (case_log['first_start_stamp'] <= EndDateTime)][['CaseID']]
+    
+    elif containment == 'end between':
+        relevant_caseids = case_log[(case_log['last_end_stamp'] >= StartDateTime) & (case_log['last_end_stamp'] <= EndDateTime)][['CaseID']]
+    
+    elif containment == 'are contained between':
+        relevant_caseids = case_log[(case_log['first_start_stamp'] >= StartDateTime) & (case_log['last_end_stamp'] <= EndDateTime)][['CaseID']]
+    
+    elif containment == 'are active between':
+        relevant_caseids = case_log[((case_log['first_start_stamp'] < StartDateTime) & (case_log['last_end_stamp'] > StartDateTime)) | ((case_log['first_start_stamp'] < EndDateTime) & (case_log['last_end_stamp'] > EndDateTime))][['CaseID']]
+
+    if retain == True:
+        filtered_log = case_log[case_log['CaseID'].isin(relevant_caseids['CaseID'])]
+        print(f'Retain all cases that {containment} {StartDateTime} and {EndDateTime}')
+    elif retain == False:
+        filtered_log = case_log[~case_log['CaseID'].isin(relevant_caseids['CaseID'])]
+        print(f'Remove all cases that {containment} {StartDateTime} and {EndDateTime}')
+
+    return filtered_log
+
+
 
 def filter_events_between(log, retain=True, from_activity='abd', from_first_occurrence=True, from_included=False, to_activity='abc', to_first_occurrence=False, to_included=False):
     # print the filter text to explain the filtering process
@@ -114,3 +147,5 @@ def filter_events_between(log, retain=True, from_activity='abd', from_first_occu
             filtered_log = filtered_log.append(df_to_append)
     
     return filtered_log
+
+
